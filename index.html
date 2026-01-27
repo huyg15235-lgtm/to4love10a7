@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tổ 4 – 10A7 | THPT Bình Gia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#020617;
+  --glass:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.15);
+  --neon:#4facfe;
+  --neon2:#00eaff;
+  --text:#e6f1ff;
+  --muted:#9fb3d9;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Inter,sans-serif;
+  background:radial-gradient(circle at top,#0b1633,#020617 70%);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* ===== INTRO AI ===== */
+#introAI{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle,#020b25,#020617 70%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:1s;
+}
+#introAI.hide{opacity:0;pointer-events:none}
+.ai-core{
+  width:150px;height:150px;
+  border-radius:50%;
+  background:radial-gradient(circle,#00eaff,#003b66);
+  box-shadow:0 0 40px #00eaff,0 0 80px #00eaff;
+  animation:pulse 2.5s infinite;
+}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.ai-title{
+  margin-top:26px;
+  font-family:Orbitron;
+  letter-spacing:3px;
+  color:#7dd3ff;
+}
+.ai-text{
+  margin-top:14px;
+  min-height:50px;
+  font-size:.9rem;
+  color:#9fb3d9;
+  text-align:center;
+}
+.loading-bar{
+  margin-top:24px;
+  width:280px;height:8px;
+  background:rgba(255,255,255,.1);
+  border-radius:20px;
+  overflow:hidden;
+}
+.loading-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#4facfe,#00eaff);
+  box-shadow:0 0 20px #00eaff;
+}
+.loading-percent{
+  margin-top:10px;
+  font-family:Orbitron;
+  font-size:.8rem;
+  color:#7dd3ff;
+}
+
+/* ===== STARS ===== */
+canvas{position:fixed;inset:0;z-index:-1}
+
+/* ===== NAV ===== */
+nav{
+  position:fixed;top:0;width:100%;
+  background:rgba(2,6,23,.75);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+.nav{
+  max-width:1200px;margin:auto;
+  padding:14px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.logo{
+  font-family:Orbitron;
+  font-weight:800;
+  color:var(--neon);
+  letter-spacing:2px;
+}
+.menu button{
+  background:none;border:none;
+  color:var(--muted);
+  font-family:Orbitron;
+  cursor:pointer;
+  margin-left:10px;
+}
+.menu button:hover{color:var(--neon2)}
+
+/* ===== STICKY TITLE ===== */
+#stickyTitle{
+  position:fixed;top:58px;width:100%;
+  text-align:center;
+  padding:10px 0;
+  background:rgba(2,6,23,.6);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  z-index:900;
+}
+#stickyTitle strong{
+  font-family:Orbitron;color:var(--neon);
+}
+#stickyTitle span{
+  display:block;font-size:.85rem;color:var(--muted);
+}
+
+/* ===== SECTIONS ===== */
+section{
+  min-height:100vh;
+  padding:160px 8% 120px;
+  display:none;
+}
+section.active{display:block}
+
+/* ===== HOME ===== */
+#home{text-align:center}
+#home h1{
+  font-family:Orbitron;
+  font-size:clamp(42px,8vw,78px);
+  color:var(--neon);
+  text-shadow:0 0 40px rgba(79,172,254,.6);
+}
+#home p{margin-top:16px;color:var(--muted)}
+
+/* ===== ABOUT ===== */
+.about-box{
+  max-width:900px;margin:auto;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:50px;text-align:center;
+}
+.about-box h2{
+  font-family:Orbitron;
+  color:var(--neon);
+  margin-bottom:20px;
+}
+.about-box p{line-height:1.8;color:var(--muted)}
+
+/* ===== MEMBERS ===== */
+.members{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:34px;
+}
+.member{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:26px;text-align:center;
+  cursor:pointer;transition:.4s;
+}
+.member:hover{
+  transform:translateY(-14px) scale(1.05);
+  box-shadow:0 0 70px rgba(79,172,254,.7);
+}
+.leader{box-shadow:0 0 90px rgba(255,215,0,.9)}
+.avatar{
+  width:110px;height:110px;
+  border-radius:50%;
+  margin:0 auto 16px;
+  background:linear-gradient(135deg,#4facfe,#00eaff);
+}
+.member strong{display:block}
+.member span{font-size:.85rem;color:var(--muted)}
+
+/* ===== MODAL ===== */
+#modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:5000;
+}
+.modal-box{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:40px;
+  width:90%;max-width:420px;
+  text-align:center;
+}
+.modal-box h3{
+  font-family:Orbitron;
+  color:var(--neon);
+  margin-bottom:20px;
+}
+.modal-box p{margin:10px 0;color:var(--muted)}
+.modal-box button{
+  margin-top:20px;
+  padding:10px 26px;
+  background:none;
+  border:1px solid var(--border);
+  color:var(--neon2);
+  cursor:pointer;
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO AI -->
+<div id="introAI">
+  <div class="ai-core"></div>
+  <h2 class="ai-title">HỆ THỐNG AI KHỞI ĐỘNG</h2>
+  <div class="ai-text" id="aiText"></div>
+  <div class="loading-bar"><div class="loading-fill" id="fill"></div></div>
+  <div class="loading-percent" id="percent">0%</div>
+</div>
+
+<canvas id="stars"></canvas>
+
+<nav>
+  <div class="nav">
+    <div class="logo">TỔ 4 – 10A7</div>
+    <div class="menu">
+      <button onclick="show('home')">Trang chủ</button>
+      <button onclick="show('about')">Giới thiệu</button>
+      <button onclick="show('members')">Thành viên</button>
+    </div>
+  </div>
+</nav>
+
+<div id="stickyTitle">
+  <strong>TỔ 4 – 10A7</strong>
+  <span>Học tập – sáng tạo – kỷ luật</span>
+</div>
+
+<section id="home" class="active">
+  <h1>TỔ 4 – 10A7</h1>
+  <p>Học tập theo tư duy công nghệ – hiện đại – kỷ luật</p>
+</section>
+
+<section id="about">
+  <div class="about-box">
+    <h2>GIỚI THIỆU</h2>
+    <p>
+      Tổ 4 – lớp 10A7 là một tập thể gồm 9 thành viên.  
+      Mỗi cá nhân là một mô-đun độc lập, phối hợp chặt chẽ
+      nhằm xây dựng hệ thống học tập hiệu quả, sáng tạo
+      và có tính kỷ luật cao.
+    </p>
+  </div>
+</section>
+
+<section id="members">
+  <div class="members">
+    <div class="member leader"><div class="avatar"></div><strong>Trương Thùy Doanh</strong><span>Tổ trưởng</span></div>
+    <div class="member"><div class="avatar"></div><strong>Nguyễn Thị Hà Anh</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Phùng Gia Huy</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Hoàng Thị Thùy Linh</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Nông Nguyễn Thành Tâm</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Hoàng Quỳnh Anh</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Hoàng Đức Lương</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Lâm Nguyễn Huyền Trang</strong><span>Thành viên</span></div>
+    <div class="member"><div class="avatar"></div><strong>Lăng Thị Thu Hiếu</strong><span>Thành viên</span></div>
+  </div>
+</section>
+
+<footer>© 2026 Tổ 4 – 10A7 | THPT Bình Gia</footer>
+
+<div id="modal">
+  <div class="modal-box">
+    <h3 id="mName"></h3>
+    <p><b>Chức vụ:</b> <span id="mRole"></span></p>
+    <p><b>Thành tích:</b> <span id="mAch"></span></p>
+    <p><b>Ưu điểm:</b> <span id="mSkill"></span></p>
+    <button onclick="modal.style.display='none'">Đóng</button>
+  </div>
+</div>
+
+<script>
+/* INTRO AI (TIẾNG VIỆT) */
+const lines=[
+ "Đang khởi tạo lõi hệ thống...",
+ "Đang tải dữ liệu lớp 10A7...",
+ "Đồng bộ hóa Tổ 4...",
+ "Hệ thống sẵn sàng. Chào mừng các bạn, thầy cô đến với Tổ 4."
+];
+let l=0,c=0,p=0;
+function type(){
+ if(l<lines.length){
+  if(c<lines[l].length){
+   aiText.innerHTML+=lines[l][c++];setTimeout(type,45);
+  }else{aiText.innerHTML+="<br>";c=0;l++;setTimeout(type,500);}
+ }
+}
+type();
+const load=setInterval(()=>{
+ p++;fill.style.width=p+"%";percent.innerText=p+"%";
+ if(p>=100){clearInterval(load);setTimeout(()=>introAI.classList.add("hide"),700);}
+},30);
+
+/* STARS */
+const cv=document.getElementById("stars"),ctx=cv.getContext("2d");
+function rs(){cv.width=innerWidth;cv.height=innerHeight}
+rs();addEventListener("resize",rs);
+let stars=Array.from({length:220},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.5}));
+(function anim(){
+ ctx.clearRect(0,0,cv.width,cv.height);
+ ctx.fillStyle="#7dd3ff";
+ stars.forEach(s=>{s.y+=.25;if(s.y>cv.height)s.y=0;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();});
+ requestAnimationFrame(anim);
+})();
+
+/* SHOW SECTIONS */
+function show(id){
+ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo(0,0);
+}
+
+/* MEMBER DATA */
+const data={
+ "Trương Thùy Doanh":["Tổ trưởng","Điều hành tổ hiệu quả","Lãnh đạo – trách nhiệm"],
+ "Nguyễn Thị Hà Anh":["Thành viên","Học tập tốt","Chăm chỉ"],
+ "Phùng Gia Huy":["Thành viên","Ứng dụng ","Sáng tạo – công nghệ"],
+ "Hoàng Thị Thùy Linh":["Thành viên","Hoạt động nhóm tốt","Năng động"],
+ "Nông Nguyễn Thành Tâm":["Thành viên","Tinh thần trách nhiệm","Kỷ luật"],
+ "Hoàng Quỳnh Anh":["Thành viên","Học lực ổn định","Cẩn thận"],
+ "Hoàng Đức Lương":["Thành viên","Hỗ trợ nhóm tốt","Hợp tác"],
+ "Lâm Nguyễn Huyền Trang":["Thành viên","Sáng tạo nội dung","Tinh tế"],
+ "Lăng Thị Thu Hiếu":["Thành viên","Tham gia tích cực","Nhiệt tình"]
+};
+document.querySelectorAll(".member").forEach(m=>{
+ m.onclick=()=>{
+  const n=m.querySelector("strong").innerText;
+  mName.innerText=n;
+  mRole.innerText=data[n][0];
+  mAch.innerText=data[n][1];
+  mSkill.innerText=data[n][2];
+  modal.style.display="flex";
+ }
+});
+</script>
+
+</body>
+</html>
